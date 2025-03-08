@@ -147,4 +147,32 @@ describe("PATCH /users/current", () => {
     expect(response.status).toBe(401);
     expect(response.body.errors).toBeDefined();
   });
-})
+});
+
+describe("DELETE /users/current", () => {
+  beforeAll(async () => {
+    await UserTest.create();
+  });
+
+  afterAll(async () => {
+    await UserTest.delete();
+  });
+
+  it("", async () => {
+    const response = await supertest(web).delete("/api/v1/users/current").set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+
+    const user = await UserTest.get();
+    expect(user.token).toBe(null);
+  });
+
+  it("", async () => {
+    const response = await supertest(web).patch("/api/v1/users/current").set("X-API-TOKEN", "...");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+});

@@ -7,3 +7,4 @@ export const apiRouter = express.Router();
 apiRouter.use(authMiddleware);
 apiRouter.get("/users/current", UserController.get);
 apiRouter.patch("/users/current", UserController.update);
+apiRouter.delete("/users/current", UserController.logout);
