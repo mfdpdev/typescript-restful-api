@@ -5,6 +5,7 @@ import { UserValidation } from "../validation/user-validation";
 import { Validation } from "../validation/validation";
 import {v4 as uuid} from "uuid";
 import bcrypt from "bcrypt";
+import { User } from "@prisma/client";
 
 export class UserService {
   static async register(request: CreateUserRequest): Promise<UserResponse> {
@@ -59,5 +60,9 @@ export class UserService {
     const response = toUserResponse(user);
     response.token = user.token!;
     return response;
+  }
+
+  static get(user: User): UserResponse {
+    return toUserResponse(user);
   }
 }

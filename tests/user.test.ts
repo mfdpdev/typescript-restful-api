@@ -66,4 +66,31 @@ describe("POST /users/login", () => {
     expect(response.status).toBe(401);
     expect(response.body.errors).toBeDefined();
   })
+});
+
+describe("GET /users/current", () => {
+  beforeAll(async () => {
+    await UserTest.create();
+  });
+
+  afterAll(async () => {
+    await UserTest.delete();
+  });
+
+  it("", async () => {
+    const response = await supertest(web).get("/api/v1/users/current").set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.username).toBe("test");
+    expect(response.body.data.name).toBe("test");
+  });
+
+  it("", async () => {
+    const response = await supertest(web).get("/api/v1/users/current").set("X-API-TOKEN", "...");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
 })
