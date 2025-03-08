@@ -2,6 +2,7 @@ import supertest from "supertest"
 import {web} from "../src/application/web"
 import {logger} from "../src/application/logging"
 import { UserTest } from "./test-util"
+import bcrypt from "bcrypt";
 
 describe("POST /users", () => {
   afterAll(async () => {
@@ -88,6 +89,59 @@ describe("GET /users/current", () => {
 
   it("", async () => {
     const response = await supertest(web).get("/api/v1/users/current").set("X-API-TOKEN", "...");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.errors).toBeDefined();
+  });
+})
+
+describe("PATCH /users/current", () => {
+  beforeAll(async () => {
+    await UserTest.create();
+  });
+
+  afterAll(async () => {
+    await UserTest.delete();
+  });
+
+  it("", async () => {
+    const response = await supertest(web).patch("/api/v1/users/current").send({
+      name: "",
+      password: "",
+    }).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(400);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("", async () => {
+    const response = await supertest(web).patch("/api/v1/users/current").send({
+      name: "user",
+    }).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.name).toBe("user");
+  });
+
+  it("", async () => {
+    const response = await supertest(web).patch("/api/v1/users/current").send({
+      password: "user",
+    }).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+
+    const user = await UserTest.get();
+    expect(await bcrypt.compare("user", user.password)).toBe(true);
+  });
+
+  it("", async () => {
+    const response = await supertest(web).patch("/api/v1/users/current").send({
+      name: "user",
+    }).set("X-API-TOKEN", "...");
 
     logger.debug(response.body);
     expect(response.status).toBe(401);
