@@ -1,5 +1,5 @@
 import { Contact, User } from "@prisma/client";
-import { ContactResponse, CreateContactRequest, toContactResponse } from "../model/contact-model";
+import { ContactResponse, CreateContactRequest, toContactResponse, UpdateContactRequest } from "../model/contact-model";
 import { ContactValidation } from "../validation/contact-validation";
 import { Validation } from "../validation/validation";
 import { prismaClient } from "../application/database";
@@ -39,5 +39,32 @@ export class ContactService {
   static async get(user: User, contactId: number): Promise<ContactResponse> {
     const contact = await this.checkContact(user, contactId);
     return toContactResponse(contact);
+  }
+
+  static async update(user: User, request: UpdateContactRequest): Promise<ContactResponse> {
+    const updateRequest = Validation.validate(ContactValidation.UPDATE, request);
+    await this.checkContact(user, request.id);
+
+    const contact = await prismaClient.contact.update({
+      where: {
+        id: request.id,
+        username: user.username,
+      },
+      data: updateRequest,
+    });
+
+    return toContactResponse(contact);
+  }
+
+  static async delete(user: User, contactId: number): Promise<string> {
+    await this.checkContact(user, contactId);
+    await prismaClient.contact.delete({
+      where: {
+        username: user.username,
+        id: contactId,
+      }
+    });
+
+    return "OK";
   }
 }
