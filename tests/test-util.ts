@@ -45,4 +45,25 @@ export class ContactTest {
       }
     });
   }
+
+  static async create(){
+    await prismaClient.contact.create({
+      data: {
+        username: "test",
+        first_name: "user",
+        last_name: "user",
+        email: "user@example.com",
+        phone: "666",
+      }
+    });
+  }
+
+  static async get(){
+    const contact = await prismaClient.contact.findFirst({
+      where: {
+        first_name: "user",
+      }
+    });
+    return contact;
+  }
 }

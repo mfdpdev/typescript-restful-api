@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test user": "jest ./tests/user.test.ts",
+    "test contact": "jest ./tests/contact.test.ts",
+    "test address": "jest"
   },
   "jest": {
     "transform": {

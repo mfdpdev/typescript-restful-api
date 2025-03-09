@@ -11,3 +11,4 @@ apiRouter.patch("/users/current", UserController.update);
 apiRouter.delete("/users/current", UserController.logout);
 
 apiRouter.post("/contacts", ContactController.create);
+apiRouter.get("/contacts/:contactId(\\d+)", ContactController.get);
