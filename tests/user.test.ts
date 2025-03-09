@@ -1,11 +1,12 @@
 import supertest from "supertest"
 import {web} from "../src/application/web"
 import {logger} from "../src/application/logging"
-import { UserTest } from "./test-util"
+import { ContactTest, UserTest } from "./test-util"
 import bcrypt from "bcrypt";
 
 describe("POST /users", () => {
-  afterAll(async () => {
+  afterEach(async () => {
+    await ContactTest.delete();
     await UserTest.delete();
   });
 
@@ -28,7 +29,6 @@ describe("POST /users", () => {
       name: "test",
     });
 
-    logger.debug(response.body);
     expect(response.status).toBe(200);
     expect(response.body.data.username).toBe("test");
     expect(response.body.data.name).toBe("test");
@@ -36,11 +36,12 @@ describe("POST /users", () => {
 });
 
 describe("POST /users/login", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await UserTest.create();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
+    await ContactTest.delete();
     await UserTest.delete();
   });
 
@@ -70,11 +71,12 @@ describe("POST /users/login", () => {
 });
 
 describe("GET /users/current", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await UserTest.create();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
+    await ContactTest.delete();
     await UserTest.delete();
   });
 
@@ -97,11 +99,12 @@ describe("GET /users/current", () => {
 })
 
 describe("PATCH /users/current", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await UserTest.create();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
+    await ContactTest.delete();
     await UserTest.delete();
   });
 
@@ -150,11 +153,12 @@ describe("PATCH /users/current", () => {
 });
 
 describe("DELETE /users/current", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await UserTest.create();
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
+    await ContactTest.delete();
     await UserTest.delete();
   });
 

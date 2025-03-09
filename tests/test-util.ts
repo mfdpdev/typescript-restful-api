@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export class UserTest {
   static async delete(){
-    await prismaClient.user.delete({
+    await prismaClient.user.deleteMany({
       where: {
         username: "test",
       }
@@ -35,4 +35,14 @@ export class UserTest {
 
         return user;
     }
+}
+
+export class ContactTest {
+  static async delete(){
+    await prismaClient.contact.deleteMany({
+      where: {
+        username: "test",
+      }
+    });
+  }
 }
