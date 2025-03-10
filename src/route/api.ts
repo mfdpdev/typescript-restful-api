@@ -19,3 +19,4 @@ apiRouter.get("/contacts", ContactController.search);
 
 apiRouter.post("/contacts/:contactId(\\d+)/addresses", AddressController.create);
 apiRouter.get("/contacts/:contactId(\\d+)/addresses/:addressId(\\d+)", AddressController.get);
+apiRouter.patch("/contacts/:contactId(\\d+)/addresses/:addressId(\\d+)", AddressController.update);
