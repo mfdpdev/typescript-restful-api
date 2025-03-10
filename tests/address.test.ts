@@ -178,3 +178,50 @@ describe("PATCH /contacts/:contactId/addresses/:addressId", () => {
     expect(response.body.errors).toBeDefined();
   });
 })
+
+describe("DELETE /contacts/:contactId/addresses/:addressId", () => {
+  afterEach(async () => {
+    await AddressTest.deleteMany();
+    await ContactTest.delete();
+    await UserTest.delete();
+  });
+
+  beforeEach(async () => {
+    await UserTest.create();
+    await ContactTest.create();
+  })
+
+  it("", async () => {
+    const contact = await ContactTest.get();
+    await AddressTest.create(contact!.id);
+    const address = await AddressTest.get();
+    const response = await supertest(web).delete(`/api/v1/contacts/${contact!.id}/addresses/${address!.id}`).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data).toBe("OK");
+  });
+
+  it("", async () => {
+    const contact = await ContactTest.get();
+    await AddressTest.create(contact!.id);
+    const address = await AddressTest.get();
+    await supertest(web).delete(`/api/v1/contacts/${contact!.id}/addresses/${address!.id}`).set("X-API-TOKEN", "test");
+    const response = await supertest(web).get(`/api/v1/contacts/${contact!.id}/addresses/${address!.id}`).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("", async () => {
+    const contact = await ContactTest.get();
+    await AddressTest.create(contact!.id);
+    const address = await AddressTest.get();
+    const response = await supertest(web).get(`/api/v1/contacts/666/addresses/${address!.id}`).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+})

@@ -23,6 +23,8 @@ export type GetAddressRequest = {
   address_id: number,
 }
 
+export type DeleteAddressRequest = GetAddressRequest;
+
 export type UpdateAddressRequest = {
   id: number,
   contact_id: number,
