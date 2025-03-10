@@ -67,3 +67,36 @@ export class ContactTest {
     return contact;
   }
 }
+
+export class AddressTest {
+
+  static async create(contactId: number){
+    await prismaClient.address.create({
+      data: {
+        "street": "street",
+        "city": "city",
+        "province": "province",
+        "country": "country",
+        "postal_code": "1234",
+        "contact_id": contactId,
+      }
+    });
+  }
+
+  static async deleteMany(){
+    await prismaClient.address.deleteMany({
+      where: {
+        country: "country",
+      }
+    });
+  }
+
+  static async get(){
+    const address = await prismaClient.address.findFirst({
+      where: {
+        country: "country",
+      }
+    });
+    return address;
+  }
+}
