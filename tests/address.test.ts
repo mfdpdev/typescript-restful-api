@@ -255,4 +255,29 @@ describe("GET /contacts/:contactId/addresses", () => {
     expect(response.status).toBe(404);
     expect(response.body.errors).toBeDefined();
   });
+
+  it("", async () => {
+    const contact = await ContactTest.get();
+    await AddressTest.create(contact!.id);
+    const response = await supertest(web).get(`/api/v1/contacts/${contact!.id}/addresses`).set("X-API-TOKEN", "test").query({
+      page: 2,
+      size: 1,
+    });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.length).toBe(0);
+  });
+
+  it("", async () => {
+    const contact = await ContactTest.get();
+    await AddressTest.create(contact!.id);
+    const response = await supertest(web).get(`/api/v1/contacts/${contact!.id}/addresses`).set("X-API-TOKEN", "test").query({
+      keyword: "adfasf",
+    });
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.length).toBe(0);
+  });
 })

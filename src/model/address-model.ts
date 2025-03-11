@@ -25,6 +25,13 @@ export type GetAddressRequest = {
 
 export type DeleteAddressRequest = GetAddressRequest;
 
+export type SearchAddressRequest = {
+  contact_id: number,
+  keyword?: string,
+  page?: number,
+  size?: number,
+}
+
 export type UpdateAddressRequest = {
   id: number,
   contact_id: number,

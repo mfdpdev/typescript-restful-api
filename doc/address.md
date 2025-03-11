@@ -137,9 +137,14 @@ Response Body (Failed) :
 }
 ```
 
-## List Address
+## Search Address
 
 Endpoint : GET /api/v1/contacts/:contactId/addresses
+
+Query Parameter :
+- keyword : string
+- page : number
+- size : number
 
 Request Header :
 - X-API-TOKEN : token
@@ -165,7 +170,12 @@ Response Body (Success) :
             "country" : "country",
             "postal_code" : "1234"
         }
-    ]
+    ],
+    "paging" : {
+        "current_page" : 1,
+        "total_page" : 10,
+        "size" : 10
+    }
 }
 ```
 

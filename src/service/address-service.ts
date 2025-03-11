@@ -1,10 +1,11 @@
 import { Address, User } from "@prisma/client";
-import { AddressResponse, CreateAddressRequest, DeleteAddressRequest, GetAddressRequest, toAddressResponse, UpdateAddressRequest } from "../model/address-model";
+import { AddressResponse, CreateAddressRequest, DeleteAddressRequest, GetAddressRequest, SearchAddressRequest, toAddressResponse, UpdateAddressRequest } from "../model/address-model";
 import { Validation } from "../validation/validation";
 import { AddressValidation } from "../validation/address-validation";
 import { ContactService } from "./contact-service";
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
+import { Pageable } from "../model/page";
 
 export class AddressService {
 
@@ -71,14 +72,66 @@ export class AddressService {
     return "OK";
   };
 
-  static async list(user: User, contactId: number): Promise<AddressResponse[]> {
-    await ContactService.get(user, contactId);
+  static async search(user: User, request: SearchAddressRequest): Promise<Pageable<AddressResponse>> {
+    const searchRequest = Validation.validate(AddressValidation.SEARCH, request);
+    await ContactService.get(user, searchRequest.contact_id);
+
+    const filters = []
+    if(searchRequest.keyword){
+      filters.push({
+        OR:[
+          {
+            street: {
+              contains: searchRequest.keyword,
+            }
+          },
+          {
+            city: {
+              contains: searchRequest.keyword,
+            }
+          },
+          {
+            province: {
+              contains: searchRequest.keyword,
+            }
+          },
+          {
+            country: {
+              contains: searchRequest.keyword,
+            }
+          },
+          {
+            postal_code: {
+              contains: searchRequest.keyword,
+            }
+          },
+        ]
+      });
+    }
 
     const addresses = await prismaClient.address.findMany({
-      where: { contact_id: contactId}
+      where: { 
+        contact_id: searchRequest.contact_id,
+        AND: filters,
+      },
+      take: searchRequest.size,
+      skip: (searchRequest.page! - 1) * searchRequest.size!,
     });
 
-    const result: AddressResponse[] = addresses.map( e => toAddressResponse(e));
-    return result;
+    const total = await prismaClient.address.count({
+      where: {
+        contact_id: searchRequest.contact_id,
+        AND: filters,
+      }
+    });
+
+    return {
+      data: addresses.map( e => toAddressResponse(e)),
+      paging: {
+        total_page: Math.ceil(total / searchRequest.size!),
+        current_page: searchRequest.page!, 
+        size: searchRequest.size!,
+      }
+    }
   }
 }

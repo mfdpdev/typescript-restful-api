@@ -29,4 +29,12 @@ export class AddressValidation {
     country: z.string().min(1).max(100).optional(),
     postal_code: z.string().min(1).max(10).optional(),
   });
+
+  static readonly SEARCH: ZodType = z.object({
+    contact_id: z.number().positive(),
+    keyword: z.string().min(1).max(100).optional(),
+    province: z.string().min(1).max(100).optional(),
+    page: z.number().positive().optional(),
+    size: z.number().positive().optional(),
+  });
 }
