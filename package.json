@@ -7,7 +7,9 @@
     "test": "jest",
     "test user": "jest ./tests/user.test.ts",
     "test contact": "jest ./tests/contact.test.ts",
-    "test address": "jest ./tests/address.test.ts"
+    "test address": "jest ./tests/address.test.ts",
+    "build": "tsc",
+    "start": "node dist/main.js"
   },
   "jest": {
     "transform": {
