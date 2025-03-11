@@ -225,3 +225,34 @@ describe("DELETE /contacts/:contactId/addresses/:addressId", () => {
     expect(response.body.errors).toBeDefined();
   });
 })
+
+describe("GET /contacts/:contactId/addresses", () => {
+  afterEach(async () => {
+    await AddressTest.deleteMany();
+    await ContactTest.delete();
+    await UserTest.delete();
+  });
+
+  beforeEach(async () => {
+    await UserTest.create();
+    await ContactTest.create();
+  })
+
+  it("", async () => {
+    const contact = await ContactTest.get();
+    await AddressTest.create(contact!.id);
+    const response = await supertest(web).get(`/api/v1/contacts/${contact!.id}/addresses`).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.data.length).toBe(1);
+  });
+  
+  it("", async () => {
+    const response = await supertest(web).get(`/api/v1/contacts/666/addresses`).set("X-API-TOKEN", "test");
+
+    logger.debug(response.body);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+})
